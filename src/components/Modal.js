@@ -7,8 +7,8 @@ function Modal({handleShowModal}) {
             <div className="absolute w-full h-full">
                 <iframe
                     title="Video"
-                    width="100%"
-                    height="100%"
+                    width="50%"
+                    height="50%"
                     src="https://www.youtube.com/embed/3h0_v1cdUIA"
                     frameBorder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

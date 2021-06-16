@@ -46,7 +46,7 @@ function Hero() {
           />
         </div>
       </div>
-      {showModal && <Modal handleShowModal={handleShowModal} />}
+      { showModal && <Modal handleShowModal={handleShowModal} />}
     </section>
     );
 }
