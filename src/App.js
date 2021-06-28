@@ -1,4 +1,5 @@
 import React from 'react';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 import Header from './components/Header.js';
 import Hero from './components/Hero.js';
@@ -8,9 +9,13 @@ import Clients from './components/Clients.js';
 import AsideMenu from './components/AsideMenu.js';
 import Footer from './components/Footer.js';
 import Offline from './components/Offline.js';
-import Splash from './pages/Splash.js';
 
-function App() {
+import Splash from './pages/Splash.js';
+import Profile from './pages/Profile.js';
+import Details from './pages/Details.js';
+import Cart from './pages/Cart.js';
+
+function App({ cart }) {
 
   const [items, setItems] = React.useState([]);
 
@@ -62,7 +67,7 @@ function App() {
     (
       <>
       {offlineStatus &&  <Offline/>}
-      <Header />
+      <Header mode="light" cart={cart} />
       <Hero />
       <Browse />
       <Arrive items={items} />
@@ -75,4 +80,44 @@ function App() {
   );
 }
 
-export default App;
+export default function Routes() {
+  const cachedCart = window.localStorage.getItem("cart");
+  const [cart, setCart] = React.useState([]);
+
+  function handleAddToCart(item) {
+    const currentIndex = cart.length;
+    const newCart = [...cart, {id: currentIndex + 1, item}];
+    setCart(newCart);
+    window.localStorage.setItem("cart", JSON.stringify(newCart));
+  }
+
+  function handleRemoveCartItem(event, id) {
+    const revisedCart = cart.filter(function(item) {
+      return item.id !== id;
+    });    
+    setCart(revisedCart);
+    window.localStorage.setItem("cart", JSON.stringify(revisedCart));
+  }
+
+  React.useEffect(function(){
+    console.info("useEffect for localStorage");
+    if(cachedCart !== null){
+      setCart(JSON.parse(cachedCart));
+    }
+  }, [cachedCart])
+
+  return (
+    <Router>
+      <Route path="/" exact>
+        <App cart={cart} />
+      </Route>
+      <Route path="/profile" exact component={Profile} />
+      <Route path="/details/:id">
+        <Details handleAddToCart={handleAddToCart} cart={cart} />
+      </Route>
+      <Route path="/cart">
+        <Cart cart={cart} handleRemoveCartItem={handleRemoveCartItem}/>
+      </Route>
+    </Router>
+  )
+};
